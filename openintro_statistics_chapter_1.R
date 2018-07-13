@@ -59,9 +59,35 @@ ggplot(fig_1_8_tbl, aes(poverty, fed_spending_percapita/100))+
   labs(y = "Federal Spending Per Capita") +
   geom_hline(yintercept= 21.5, color="red")+
   geom_vline(xintercept= 41.5, color="red")+
-  labs(caption = "Figure 1.8: A scatterplot showing fed spend against poverty. Owsley County of Kentucky, with a poverty rate of 41.5% and federal spending of $21.50 per capita, is highlighted.") 
-
+  labs(caption = "Figure 1.8: A scatterplot showing fed spend against poverty. Owsley County of Kentucky, with a poverty rate of 41.5% and federal spending of $21.50 per capita, is highlighted.") +
+  theme_classic()+
+  theme(plot.caption = element_text(hjust = 0.5))
 fig_1_8
+
+# Fig. 1.18 Example of nonlinear relation between two variables
+# example in the text is shown as a linear one, though
+fig_1_18<-ggplot(cars,aes(weight, price))+
+  geom_point()+
+  geom_smooth(linetype="dashed")+
+  labs(x="Weight (Pounds)")+
+  labs(y="Price ($1000s)")+
+  theme_light()+
+  labs(caption = "Figure 1.18: A scatterplot of price versus weight for 54 cars.")+
+  theme(plot.caption = element_text(hjust = 0.5))
+fig_1_18
+
+# ---1.6.2 Dot plots and the mean----
+# Simple Dotplot
+
+
+fig_1_20<-ggplot(email50, aes(x=num_char)) + 
+  geom_dotplot()+
+  labs(caption = "Number of Characters (in thousands)")+
+  theme_light()+
+  theme(plot.caption = element_text(hjust = 0.5))
+
+fig_1_20  
+
 
 # --- SAMPLE ----
 sample(countyComplete$hispanic, 5)
