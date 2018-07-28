@@ -174,37 +174,6 @@ ggplot(email50, aes(x=num_char)) +
 
 #  see also https://rdrr.io/cran/openintro/man/
 
-# Fig 1.29 (a)
-MLB %>% 
-  ggplot()+
-  geom_histogram(aes(salary))
-
-bfill <- "skyblue4"
-bline <- "grey3"
-ggplot(MLB, aes(x=salary/1000)) + 
-  geom_histogram( binwidth = 5,colour = bline, fill = bfill)+
-  labs(caption = "Figure 1.29: (a) Histogram of MLB player salaries for 2010, in millions of dollars")+
-  labs(x = "Salary (millions of dollars)\n(a)")+
-  labs(y = "") +
-  theme_light()+
-  theme(plot.caption = element_text(hjust = 0.5))
-
-
-# Fig 1.29 (b)
-MLB %>% 
-  ggplot()+
-  geom_histogram(aes(salary))
-
-bfill <- "skyblue4"
-bline <- "grey3"
-ggplot(MLB, aes(x=salary/1000)) + 
-  geom_histogram( binwidth = 5,colour = bline, fill = bfill)+
-  labs(caption = "Figure 1.29: (b) Histogram of the log-transformed MLB player salaries for 2010.")+
-  labs(x = "loge(Salary), where Salary is in millions USD\n(b)")+
-  labs(y = "") +
-  theme_light()+
-  theme(plot.caption = element_text(hjust = 0.5))
-
 #----1.6.4 Variance and Standard Deviation----
 # Manually calculating deviation as xi-xavg with a for loop
 calc.deviation = function(x) {
@@ -312,16 +281,45 @@ tbl_1_27 %>%
   group_by(num_char) %>% 
   summarise(mean(num_char))
 
-mydummy <- as.tibble(apply(tbl_1_27, 2, median, na.rm=TRUE))
-             
+tbl_1_28 <- as.tibble(apply(tbl_1_27, 2, median, na.rm=TRUE))
+colnames(tbl_1_28)[1]<-"Median"     
 
-mydummy %<>% 
+
+tbl_1_28 %<>% 
   mutate("IQR"=apply(tbl_1_27, 2, IQR, na.rm=TRUE)) %>% 
   mutate("Mean"=apply(tbl_1_27, 2, mean, na.rm=TRUE)) %>% 
-  mutate("Std Dev"=apply(tbl_1_27, 2, sd, na.rm=TRUE)) %>% View()
+  mutate("Std Dev"=apply(tbl_1_27, 2, sd, na.rm=TRUE)) 
 
 
-  
+#----  1.6.7 Transforming Data----
+
+# Fig 1.29 (a)
+MLB %>% 
+  ggplot()+
+  geom_histogram(aes(salary))
+
+bfill <- "skyblue4"
+bline <- "grey3"
+ggplot(MLB, aes(x=salary/1000)) + 
+  geom_histogram( binwidth = 5,colour = bline, fill = bfill)+
+  labs(caption = "Figure 1.29: (a) Histogram of MLB player salaries for 2010, in millions of dollars")+
+  labs(x = "Salary (millions of dollars)\n(a)")+
+  labs(y = "") +
+  theme_light()+
+  theme(plot.caption = element_text(hjust = 0.5))
 
 
+# Fig 1.29 (b)
+MLB %>% 
+  ggplot()+
+  geom_histogram(aes(salary))
 
+bfill <- "skyblue4"
+bline <- "grey3"
+ggplot(MLB, aes(x=log(salary/1000))) + 
+  geom_histogram( binwidth = 0.5,colour = bline, fill = bfill)+
+  labs(caption = "Figure 1.29: (b) Histogram of the log-transformed MLB player salaries for 2010.")+
+  labs(x = "loge(Salary), where Salary is in millions USD\n(b)")+
+  labs(y = "") +
+  theme_light()+
+  theme(plot.caption = element_text(hjust = 0.5))
