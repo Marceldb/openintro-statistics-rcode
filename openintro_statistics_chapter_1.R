@@ -225,7 +225,7 @@ calc.deviation = function(x) {
 
 calc.deviation(email50$num_char)
 
-# Sample Variance s2
+#---Sample Variance s^2 
 # manually calculating sample variance s2 with a for loop
 calc.smpl.variance = function(x) {
   avg<-mean(x)
@@ -252,7 +252,76 @@ calc.smpl.variance = function(x) {
 }
 calc.smpl.variance(email50$num_char)
 
-# Check_ calculating sample variance with r function  (n-1 in the denominator)
+# Check_ calculating s^2 sample variance with r function  (n-1 in the denominator)
 var(email50$num_char) 
 # 172.2725 same as the manual function 
-# the book says 172,44 probably an error 
+# the book says 172,44 probably an error
+
+# Calculation variance of a population (n in the denominator)
+
+
+#---Calculting s Sample Standard Deviation 
+sqrt(var(email50$num_char))
+# or directly
+sd(email50$num_char)
+
+#---1.6.5 Box plots, quartiles, and the median----
+# calculating first and second half of email$num_char distribution
+tbl_1_6_5<-email50
+tbl_1_6_5$myhalf="second"
+tbl_1_6_5$myhalf[which(tbl_1_6_5$num_char<=median(tbl_1_6_5$num_char))] = "first"
+
+tbl_1_6_5 %>% 
+ggplot(aes(y=num_char)) +
+  geom_boxplot()+
+  geom_point(x= -0.4, aes(shape = myhalf, colour=myhalf))+
+  labs(caption = "Figure 1.26: A vertical dot plot next to a labeled box plot for the number of characters in 50 emails. The median (6,890), splits the data into the bottom 50% and the top 50%, marked in the dot plot by open circles and triangles, respectively.")+
+  labs(y = "Number of Characters (in thousands)")+
+  theme_light()+
+  theme(plot.caption = element_text(hjust = 0.5))
+ 
+#---1.6.6 Robust Statistics----
+
+tbl_1_27<-email50 %>% 
+  select(num_char) %>% 
+  mutate(dropoutlier=num_char, newoutlier=num_char)
+
+# removing outlier 64.401
+tbl_1_27 %<>% 
+   mutate(dropoutlier=case_when(num_char==64.401 ~ NA_real_, TRUE ~  dropoutlier))   
+
+# incrementing outlier 64.401
+tbl_1_27 %<>% 
+  mutate(newoutlier=case_when(num_char==64.401 ~ 150, TRUE ~  dropoutlier))
+tbl_1_27 %>% View()
+
+# Plotting fig 1.27 Figure 1.27: Dot plots of the original character count data and two modified data sets
+
+tbl_1_27 %>% 
+  ggplot()+
+  geom_point(aes(x=num_char, y = 3)) +
+  geom_point(aes(x=dropoutlier, y = 2)) +
+  geom_point(aes(x=newoutlier, y = 1))+
+  labs(caption = "Figure 1.27: Dot plots of the original character count data and two modified data sets")+
+  labs(x = "Number of Characters (in thousands)")+
+  theme_light()+
+  theme(plot.caption = element_text(hjust = 0.5))
+
+tbl_1_27 %>% 
+  select(num_char, dropoutlier, newoutlier) %>%
+  group_by(num_char) %>% 
+  summarise(mean(num_char))
+
+mydummy <- as.tibble(apply(tbl_1_27, 2, median, na.rm=TRUE))
+             
+
+mydummy %<>% 
+  mutate("IQR"=apply(tbl_1_27, 2, IQR, na.rm=TRUE)) %>% 
+  mutate("Mean"=apply(tbl_1_27, 2, mean, na.rm=TRUE)) %>% 
+  mutate("Std Dev"=apply(tbl_1_27, 2, sd, na.rm=TRUE)) %>% View()
+
+
+  
+
+
+
