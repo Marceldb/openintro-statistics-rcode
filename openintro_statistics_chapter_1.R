@@ -323,3 +323,16 @@ ggplot(MLB, aes(x=log(salary/1000))) +
   labs(y = "") +
   theme_light()+
   theme(plot.caption = element_text(hjust = 0.5))
+
+# fig. 1.30
+tbl_1_30<-email50
+tbl_1_30$line_breaks<-log(email50$line_breaks)
+tbl_1_30$num_char<-log(email50$num_char)
+
+tbl_1_30 %>%
+  ggplot(aes(x=line_breaks,y=num_char))+
+  geom_point(color="darkblue")+
+  xlab("log(num_char)")+
+  ylab("log(line_breaks)")+
+  theme_light()
+ 
